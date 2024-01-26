@@ -7,7 +7,7 @@ public class ConsoleRender
         
     }
 
-    public void SelectMovements(IBoard board)
+    public string SelectMovements(IBoard board)
     {
         
     }

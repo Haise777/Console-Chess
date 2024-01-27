@@ -2,19 +2,14 @@ namespace Chess;
 
 public partial class Board
 {
-    public Square[,] Squares { get; set; }
+    public Square[] Squares { get; set; }
 
     public Board()
     {
-        Squares = new Square[8,8];
-        for (var y = 0; y < 8; y++)
+        Squares = new Square[64];
+        for (var i = 0; i < 64; i++)
         {
-            for (var x = 0; x < 8; x++)
-            {
-                Squares[y, x] = SquareFactory(y, x);
-            }
+            Squares[i] = SquareFactory(i);
         }
     }
-    
-    
 }

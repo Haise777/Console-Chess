@@ -1,11 +1,10 @@
 namespace Chess;
 
-public class Piece(Color side, PieceType type)
+public class Piece(int id, Color color, PieceType type)
 {
-    public Color Side { get; } = side;
+    public int Id { get; } = id;
+    public Color Color { get; } = color;
     public PieceType Type { get; } = type;
-    public bool IsCaptured { get; set; }
-    
 }
 
 public enum PieceType

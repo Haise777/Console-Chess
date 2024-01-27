@@ -20,7 +20,8 @@ public class Engine
 
         return validPieces.ToArray();
     }
-    
+
+    //Should this really needed to be a wrapper?
     public Square[] GetValidMovementSquare(Piece piece, Board board)
     {
         return piece.GetValidMovements(board);

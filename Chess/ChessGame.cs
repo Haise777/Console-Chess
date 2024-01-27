@@ -9,31 +9,26 @@ public class ChessGame(ConsoleDisplay display, Engine engine, Board board)
 
     public void Start()
     {
-        Match();
-    }
-
-    private void Match()
-    {
         while (true)
         {
             _isWhite = !_isWhite;
             Console.Clear();
             Console.WriteLine("Is white: " + _isWhite);
-
-            //Render the board
+            
             display.DisplayBoard(board.Squares);
-
-            //Give the player control options
+            
             MoveControl();
+            
+            //TODO: Finish game logic
         }
     }
-
+    
     private void MoveControl()
     {
-        var piece = SelectPiece(); //Select the piece you want to move
-        var square = SelectSquare(piece); //Show the available squares that this piece can move or capture
+        var piece = SelectPiece(); 
+        var square = SelectSquare(piece); 
         
-        if (square.Piece is not null) //Process the movement
+        if (square.Piece is not null) 
             _captured.Add(square.Piece);
 
         engine.MovePiece(piece, square, board);
@@ -47,7 +42,8 @@ public class ChessGame(ConsoleDisplay display, Engine engine, Board board)
             var selectedPiece = display.SelectPiece();
             if (validPieces.All(p => p.Id != selectedPiece))
             {
-                //Invalid piece
+                //TODO: Invalid piece
+                Console.WriteLine("Invalid Piece");
                 continue;
             }
             
@@ -63,7 +59,8 @@ public class ChessGame(ConsoleDisplay display, Engine engine, Board board)
             var selectedSquare = display.SelectSquareToMove(validSquares);
             if (validSquares.All(s => s.Id != selectedSquare))
             {
-                //Invalid square
+                //TODO: Invalid square
+                Console.WriteLine("Invalid position to move");
                 continue;   
             }
 

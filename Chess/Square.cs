@@ -1,3 +1,5 @@
+using Chess.Pieces;
+
 namespace Chess;
 
 public class Square(int id, Piece? piece = null)

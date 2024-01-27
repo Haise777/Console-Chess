@@ -1,3 +1,5 @@
+using Chess.Pieces;
+
 namespace Chess;
 
 public class Engine
@@ -21,7 +23,7 @@ public class Engine
     
     public Square[] GetValidMovementSquare(Piece piece, Board board)
     {
-        throw new NotImplementedException();
+        return piece.GetValidMovements(board);
     }
 
     public void MovePiece(Piece pieceToMove, Square squareToMove, Board board)

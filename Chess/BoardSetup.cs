@@ -1,3 +1,5 @@
+using Chess.Pieces;
+
 namespace Chess;
 
 //TODO: Set the pieces properly
@@ -10,7 +12,7 @@ public partial class Board
         return i switch
         {
             //White pieces
-            1 => new Square(i, new Piece(1, Color.White, PieceType.Tower)),
+            1 => new Square(i, new Tower(1, Color.White)),
             2 => new Square(i, new Piece(2, Color.White, PieceType.Tower)),
             3 => new Square(i, new Piece(3, Color.White, PieceType.Tower)),
             4 => new Square(i, new Piece(4, Color.White, PieceType.Tower)),

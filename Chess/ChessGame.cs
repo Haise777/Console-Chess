@@ -1,3 +1,5 @@
+using Chess.Pieces;
+
 namespace Chess;
 
 public class ChessGame(ConsoleDisplay display, Engine engine)
@@ -27,13 +29,10 @@ public class ChessGame(ConsoleDisplay display, Engine engine)
 
     private void MoveControl()
     {
-        //Select the piece you want to move
-        var piece = SelectPiece();
-        //Show the available squares that this piece can move or capture
-        var square = SelectSquare(piece);
-
-        //Process the movement
-        if (square.Piece is not null)
+        var piece = SelectPiece(); //Select the piece you want to move
+        var square = SelectSquare(piece); //Show the available squares that this piece can move or capture
+        
+        if (square.Piece is not null) //Process the movement
             _captured.Add(square.Piece);
 
         engine.MovePiece(piece, square, _board);

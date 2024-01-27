@@ -2,9 +2,8 @@ using Chess.Pieces;
 
 namespace Chess;
 
-public class ChessGame(ConsoleDisplay display, Engine engine)
+public class ChessGame(ConsoleDisplay display, Engine engine, Board board)
 {
-    private readonly Board _board;
     private bool _isWhite = true;
     private List<Piece> _captured = [];
 
@@ -17,10 +16,11 @@ public class ChessGame(ConsoleDisplay display, Engine engine)
     {
         while (true)
         {
+            _isWhite = !_isWhite;
             Console.Clear();
 
             //Render the board
-            display.DisplayBoard(_board);
+            display.DisplayBoard(board.Squares);
 
             //Give the player control options
             MoveControl();
@@ -35,14 +35,12 @@ public class ChessGame(ConsoleDisplay display, Engine engine)
         if (square.Piece is not null) //Process the movement
             _captured.Add(square.Piece);
 
-        engine.MovePiece(piece, square, _board);
-                
-        //Repeat the cycle
+        engine.MovePiece(piece, square, board);
     }
     
     private Piece SelectPiece()
     {
-        var validPieces = engine.GetValidPieces(_board, _isWhite);
+        var validPieces = engine.GetValidPieces(board, _isWhite);
         while (true)
         {
             var selectedPiece = display.SelectPiece();
@@ -58,7 +56,7 @@ public class ChessGame(ConsoleDisplay display, Engine engine)
     
     private Square SelectSquare(Piece piece)
     {
-        var validSquares = engine.GetValidMovementSquare(piece, _board);
+        var validSquares = engine.GetValidMovementSquare(piece, board);
         while (true)
         {
             var selectedSquare = display.SelectSquareToMove(validSquares);

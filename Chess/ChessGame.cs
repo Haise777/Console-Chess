@@ -4,7 +4,7 @@ namespace Chess;
 
 public class ChessGame(ConsoleDisplay display, Engine engine, Board board)
 {
-    private bool _isWhite = true;
+    private bool _isWhite;
     private List<Piece> _captured = [];
 
     public void Start()
@@ -18,6 +18,7 @@ public class ChessGame(ConsoleDisplay display, Engine engine, Board board)
         {
             _isWhite = !_isWhite;
             Console.Clear();
+            Console.WriteLine("Is white: " + _isWhite);
 
             //Render the board
             display.DisplayBoard(board.Squares);

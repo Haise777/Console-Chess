@@ -1,6 +1,6 @@
 namespace Chess.Pieces;
 
-public class Tower(int id, Color color) : Piece(id, color)
+public class Rook(int id, Color color) : Piece(id, color)
 {
     public override Square[] GetValidMovements(Board board)
     {

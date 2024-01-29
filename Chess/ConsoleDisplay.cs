@@ -1,7 +1,7 @@
 using Chess.Pieces;
 
 namespace Chess;
-
+//TODO: This whole class will be remade
 public class ConsoleDisplay
 {
     public void DisplayBoard(Board board)

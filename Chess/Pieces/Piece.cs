@@ -7,13 +7,9 @@ public abstract class Piece(int id, Color color)
     protected List<Square> AvailableMovements { get; private set; } = [];
     public Dictionary<IRayPiece, int> PinnedBy { get; set; } = new();
 
-    public IEnumerable<Square> GetAvailableMovements()
-    {
-        return RemoveIllegalSquares(AvailableMovements);
-    }
+    public IEnumerable<Square> GetAvailableMovements() => RemoveIllegalSquares(AvailableMovements);
 
-    public void FlushAvailableMovements()
-        => AvailableMovements.Clear();
+    public void FlushAvailableMovements() => AvailableMovements.Clear();
 
     protected void AddSquareIfValid(int position, List<Square> validSquares, Square[] squares)
     {
@@ -24,7 +20,7 @@ public abstract class Piece(int id, Color color)
     protected IEnumerable<Square> RemoveIllegalSquares(IEnumerable<Square> validSquares)
     {
         if (PinnedBy.Count < 1) return validSquares.ToArray();
-        
+
         var squares = new List<Square>();
         foreach (var pinned in PinnedBy)
         {

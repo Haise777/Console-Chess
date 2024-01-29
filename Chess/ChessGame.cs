@@ -1,4 +1,5 @@
 using Chess.Pieces;
+// ReSharper disable PossibleMultipleEnumeration
 
 namespace Chess;
 
@@ -13,59 +14,62 @@ public class ChessGame(ConsoleDisplay display, Engine engine, Board board)
         while (true)
         {
             _isWhite = !_isWhite;
-            Console.Clear();
-            Console.WriteLine("Is white: " + _isWhite);
-            
-            display.DisplayBoard(board);
-            
             MoveControl();
-            
+
             //TODO: Finish game logic
         }
     }
-    
+
     private void MoveControl()
     {
-        var piece = SelectPiece(); 
-        var square = SelectSquare(piece); 
+        Piece? piece = null;
+        Square? square;
+
+        while (true)
+        {
+            Console.Clear();
+            display.DisplayBoard(board);
+            Console.WriteLine("Is white: " + _isWhite);
+            
+            if (piece is null)
+                if ((piece = SelectPiece()) is null)
+                    continue;
+
+            if ((square = SelectSquare(piece)) is not null) break;
+        }
         
-        if (square.Piece is not null) 
+        if (square.Piece is not null)
             _captured.Add(square.Piece);
 
         engine.MovePiece(piece, square, board);
     }
-    
-    private Piece SelectPiece()
+
+    private Piece? SelectPiece()
     {
         var validPieces = engine.GetValidPieces(board, _isWhite);
-        while (true)
+
+        var selectedPiece = display.SelectPiece();
+        if (validPieces.All(p => p.Id != selectedPiece))
         {
-            var selectedPiece = display.SelectPiece();
-            if (validPieces.All(p => p.Id != selectedPiece))
-            {
-                //TODO: Invalid piece
-                Console.WriteLine("Invalid Piece");
-                continue;
-            }
-            
-            return validPieces.Single(p => p.Id == selectedPiece);
+            Console.WriteLine("Invalid Piece");
+            return null;
         }
+
+        return validPieces.Single(p => p.Id == selectedPiece);
     }
-    
-    private Square SelectSquare(Piece piece)
+
+    private Square? SelectSquare(Piece piece)
     {
         var validSquares = engine.GetValidMovementSquare(piece);
-        while (true)
-        {
-            var selectedSquare = display.SelectSquareToMove(piece, validSquares.ToArray());
-            if (validSquares.All(s => s.Id != selectedSquare))
-            {
-                //TODO: Invalid square
-                Console.WriteLine("Invalid position to move");
-                continue;   
-            }
 
-            return validSquares.Single(s => s.Id == selectedSquare);
+        var selectedSquare = display.SelectSquareToMove(piece, validSquares.ToArray());
+        if (validSquares.All(s => s.Id != selectedSquare))
+        {
+            //TODO: Invalid square
+            Console.WriteLine("Invalid position to move");
+            return null;
         }
+
+        return validSquares.Single(s => s.Id == selectedSquare);
     }
 }

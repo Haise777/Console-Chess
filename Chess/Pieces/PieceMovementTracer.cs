@@ -5,7 +5,7 @@ using LineDataTuple = ( //Alias for tuple
 
 namespace Chess.Pieces;
 
-public static class PieceMovementRay
+public static class PieceMovementTracer
 {
     public static IEnumerable<Square> GetPlusSquares(this IRayPiece currentPiece, int startingPosition, Square[] allSquares)
     {

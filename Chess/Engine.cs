@@ -33,5 +33,27 @@ public class Engine
             .Single(sqr => sqr.Piece?.Id == pieceToMove.Id)
             .Piece = null;
         squareToMove.Piece = pieceToMove;
+        
+        UpdatePaths(board);
+    }
+
+    private void UpdatePaths(Board board)
+    {
+        var pieces = board.Squares
+            .Where(sqr => sqr.Piece is not null)
+            .Select(p => p.Piece);
+
+        foreach (var piece in pieces)
+        {
+            piece.PinnedBy.Clear();
+            if (piece.GetType().GetInterface(nameof(IRayPiece)) == typeof(IRayPiece))
+            {
+                (piece as IRayPiece).ClearRays();
+            }
+        }
+        foreach (var piece in pieces)
+        {
+            piece.GetValidMovements(board);
+        }
     }
 }

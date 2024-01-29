@@ -13,6 +13,11 @@ public class Pawn(int id, Color color) : Piece(id, color)
         else
             AddSquareIfValid(squares, validSquares, position - 8);
         
+        if (PinnedBy.Count > 0)
+            validSquares = RemoveIllegalSquares(validSquares).ToList();
+        
         return validSquares.ToArray();
+        
+        return RemoveIllegalSquares(validSquares.ToList());
     }
 }

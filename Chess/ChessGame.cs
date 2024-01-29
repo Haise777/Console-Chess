@@ -56,7 +56,7 @@ public class ChessGame(ConsoleDisplay display, Engine engine, Board board)
         var validSquares = engine.GetValidMovementSquare(piece, board);
         while (true)
         {
-            var selectedSquare = display.SelectSquareToMove(validSquares);
+            var selectedSquare = display.SelectSquareToMove(piece, validSquares);
             if (validSquares.All(s => s.Id != selectedSquare))
             {
                 //TODO: Invalid square

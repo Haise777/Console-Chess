@@ -6,5 +6,5 @@ public class Square(int id, Piece? piece = null)
 {
     public int Id { get; } = id;
     public Piece? Piece { get; set; } = piece;
-    
+    public List<Piece> Threats { get; set; } = []; //TODO Threats
 }

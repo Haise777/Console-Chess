@@ -2,15 +2,15 @@ namespace Chess.Pieces;
 
 public class Bishop(int id, Color color) : Piece(id, color), IRayPiece
 {
-    public override Square[] GetValidMovements(Board board)
+    public override void ScanAvailableMovements(Board board)
     {
         var position = board.Squares.Single(sqr => sqr.Piece?.Id == Id).Id - 1;
-        var validSquares = this.GetCrossSquares(position, board.Squares);
+        var availableSquares = this.GetCrossSquares(position, board.Squares);
 
         if (PinnedBy.Count > 0)
-            validSquares = RemoveIllegalSquares(validSquares.ToList());
+            availableSquares = RemoveIllegalSquares(availableSquares);
         
-        return validSquares;
+        AvailableMovements.AddRange(availableSquares);
     }
 
     public Dictionary<int, List<Square>> SquaresInSight { get; set; } = new()

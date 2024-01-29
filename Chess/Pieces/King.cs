@@ -2,11 +2,11 @@ namespace Chess.Pieces;
 
 public class King(int id, Color color) : Piece(id, color)
 {
-    public override Square[] GetValidMovements(Board board)
+    public override void ScanAvailableMovements(Board board)
     {
         var squares = board.Squares;
         var position = squares.Single(sqr => sqr.Piece?.Id == Id).Id - 1;
-        var validSquares = new List<Square>();
+        var availableSquares = new List<Square>();
         
         var up = position + 8;
         var upperRight = position + 9;
@@ -19,36 +19,36 @@ public class King(int id, Color color) : Piece(id, color)
 
         if (up < 64)
         {
-            AddSquareIfValid(squares, validSquares, up);
+            AddSquareIfValid(up, availableSquares, squares);
             
             if (right % 8 != 0)
             {
-                AddSquareIfValid(squares, validSquares, upperRight);
-                AddSquareIfValid(squares, validSquares, right);
+                AddSquareIfValid(upperRight, availableSquares, squares);
+                AddSquareIfValid(right, availableSquares, squares);
             }
 
             if ((left + 1) % 8 != 0)
             {
-                AddSquareIfValid(squares, validSquares, upperLeft);
-                AddSquareIfValid(squares, validSquares, left);
+                AddSquareIfValid(upperLeft, availableSquares, squares);
+                AddSquareIfValid(left, availableSquares, squares);
             }
         }
 
         if (down >= 0)
         {
-            AddSquareIfValid(squares, validSquares, down);
+            AddSquareIfValid(down, availableSquares, squares);
             
             if (right % 8 != 0)
             {
-                AddSquareIfValid(squares, validSquares, lowerRight);
+                AddSquareIfValid(lowerRight, availableSquares, squares);
             }
 
             if ((left + 1) % 8 != 0)
             {
-                AddSquareIfValid(squares, validSquares, lowerLeft);
+                AddSquareIfValid(lowerLeft, availableSquares, squares);
             }
         }
 
-        return validSquares.ToArray();
+        AvailableMovements.AddRange(availableSquares);
     }
 }

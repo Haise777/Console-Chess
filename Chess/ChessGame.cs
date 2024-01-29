@@ -9,13 +9,14 @@ public class ChessGame(ConsoleDisplay display, Engine engine, Board board)
 
     public void Start()
     {
+        engine.UpdatePaths(board);
         while (true)
         {
             _isWhite = !_isWhite;
             Console.Clear();
             Console.WriteLine("Is white: " + _isWhite);
             
-            display.DisplayBoard(board.Squares);
+            display.DisplayBoard(board);
             
             MoveControl();
             
@@ -53,10 +54,10 @@ public class ChessGame(ConsoleDisplay display, Engine engine, Board board)
     
     private Square SelectSquare(Piece piece)
     {
-        var validSquares = engine.GetValidMovementSquare(piece, board);
+        var validSquares = engine.GetValidMovementSquare(piece);
         while (true)
         {
-            var selectedSquare = display.SelectSquareToMove(piece, validSquares);
+            var selectedSquare = display.SelectSquareToMove(piece, validSquares.ToArray());
             if (validSquares.All(s => s.Id != selectedSquare))
             {
                 //TODO: Invalid square

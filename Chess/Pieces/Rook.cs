@@ -2,15 +2,15 @@ namespace Chess.Pieces;
 
 public class Rook(int id, Color color) : Piece(id, color), IRayPiece
 {
-    public override Square[] GetValidMovements(Board board)
+    public override void ScanAvailableMovements(Board board)
     {
         var position = board.Squares.Single(s => s.Piece?.Id == Id).Id - 1;
-        var validSquares = this.GetPlusSquares(position, board.Squares);
+        var availableSquares = this.GetPlusSquares(position, board.Squares);
 
         if (PinnedBy.Count > 0)
-            validSquares = RemoveIllegalSquares(validSquares.ToList());
+            availableSquares = RemoveIllegalSquares(availableSquares.ToList());
         
-        return validSquares;
+        AvailableMovements.AddRange(availableSquares);
     }
     
     public Dictionary<int, List<Square>> SquaresInSight { get; set; } = new()

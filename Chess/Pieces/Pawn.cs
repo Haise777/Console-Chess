@@ -2,22 +2,20 @@ namespace Chess.Pieces;
 
 public class Pawn(int id, Color color) : Piece(id, color)
 {
-    public override Square[] GetValidMovements(Board board)
+    public override void ScanAvailableMovements(Board board)
     {
         var squares = board.Squares;
         var position = squares.Single(sqr => sqr.Piece?.Id == Id).Id - 1;
-        var validSquares = new List<Square>();
+        var availableSquares = new List<Square>();
 
         if (Color == Color.White)
-            AddSquareIfValid(squares, validSquares, position + 8);
+            AddSquareIfValid(position + 8, availableSquares, squares);
         else
-            AddSquareIfValid(squares, validSquares, position - 8);
+            AddSquareIfValid(position - 8, availableSquares, squares);
         
         if (PinnedBy.Count > 0)
-            validSquares = RemoveIllegalSquares(validSquares).ToList();
+            availableSquares = RemoveIllegalSquares(availableSquares).ToList();
         
-        return validSquares.ToArray();
-        
-        return RemoveIllegalSquares(validSquares.ToList());
+        AvailableMovements.AddRange(availableSquares);
     }
 }

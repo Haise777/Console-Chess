@@ -4,8 +4,9 @@ namespace Chess;
 
 public class ConsoleDisplay
 {
-    public void DisplayBoard(Square[] board)
+    public void DisplayBoard(Board board)
     {
+        var squares = board.Squares;
         for (var i = 0; i < 64; i++)
         {
             if (i % 8 == 0)
@@ -13,7 +14,7 @@ public class ConsoleDisplay
                 Console.Write("\n");
             }
             Console.Write(
-                $"{board[i].Id:00}:{PieceTranslator(board[i].Piece?.Id) ?? "   "}{board[i].Piece?.Color.ToString().ToLower()[0] ?? ' '} | ");
+                $"{squares[i].Id:00}:{PieceTranslator(squares[i].Piece?.Id) ?? "   "}{squares[i].Piece?.Color.ToString().ToLower()[0] ?? ' '} | ");
         }
     }
 
@@ -22,12 +23,12 @@ public class ConsoleDisplay
         return int.Parse(Console.ReadLine());
     }
 
-    public int SelectSquareToMove(Piece piece, Square[] board)
+    public int SelectSquareToMove(Piece piece, Square[] squares)
     {
-        for (var i = 0; i < board.Length; i++)
+        for (var i = 0; i < squares.Length; i++)
         {
             Console.Write(
-                $"{board[i].Id:00}:{PieceTranslator(board[i].Piece?.Id) ?? "   "}{board[i].Piece?.Color.ToString().ToLower()[0] ?? ' '} | ");
+                $"{squares[i].Id:00}:{PieceTranslator(squares[i].Piece?.Id) ?? "   "}{squares[i].Piece?.Color.ToString().ToLower()[0] ?? ' '} | ");
         }
 
         Console.Write($"\n({piece.Id}){piece.GetType().Name} > ");

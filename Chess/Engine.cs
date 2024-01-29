@@ -4,27 +4,20 @@ namespace Chess;
 
 public class Engine
 {
-    public Piece[] GetValidPieces(Board board, bool isWhite)
+    public IEnumerable<Piece> GetValidPieces(Board board, bool isWhite)
     {
-        var validPieces = new List<Piece>();
-        foreach (var square in board.Squares)
-        {
-            switch (isWhite)
-            {
-                case true when square.Piece?.Color == Color.White:
-                case false when square.Piece?.Color == Color.Black:
-                    validPieces.Add(square.Piece);
-                    break;
-            }
-        }
+        var validPieces = board.Squares
+            .Where(sqr => sqr.Piece is not null)
+            .Select(sqr => sqr.Piece)
+            .Where(p => (p?.Color == Color.White) == isWhite);
 
-        return validPieces.ToArray();
+        return validPieces!;
     }
 
     //Should this really needed to be a wrapper?
-    public Square[] GetValidMovementSquare(Piece piece, Board board)
+    public IEnumerable<Square> GetValidMovementSquare(Piece piece)
     {
-        return piece.GetValidMovements(board);
+        return piece.GetAvailableMovements();
     }
 
     public void MovePiece(Piece pieceToMove, Square squareToMove, Board board)
@@ -37,7 +30,7 @@ public class Engine
         UpdatePaths(board);
     }
 
-    private void UpdatePaths(Board board)
+    public void UpdatePaths(Board board)
     {
         var pieces = board.Squares
             .Where(sqr => sqr.Piece is not null)
@@ -46,6 +39,7 @@ public class Engine
         foreach (var piece in pieces)
         {
             piece.PinnedBy.Clear();
+            piece.FlushAvailableMovements();
             if (piece.GetType().GetInterface(nameof(IRayPiece)) == typeof(IRayPiece))
             {
                 (piece as IRayPiece).ClearRays();
@@ -53,7 +47,7 @@ public class Engine
         }
         foreach (var piece in pieces)
         {
-            piece.GetValidMovements(board);
+            piece.ScanAvailableMovements(board);
         }
     }
 }

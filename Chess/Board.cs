@@ -2,7 +2,7 @@ namespace Chess;
 
 public partial class Board
 {
-    public Square[] Squares { get; set; }
+    public Square[] Squares { get; }
 
     public Board()
     {

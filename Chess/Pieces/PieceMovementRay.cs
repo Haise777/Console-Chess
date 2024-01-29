@@ -7,7 +7,7 @@ namespace Chess.Pieces;
 
 public static class PieceMovementRay
 {
-    public static Square[] GetPlusSquares(this IRayPiece currentPiece, int startingPosition, Square[] allSquares)
+    public static IEnumerable<Square> GetPlusSquares(this IRayPiece currentPiece, int startingPosition, Square[] allSquares)
     {
         var tracesIndex = currentPiece.SquaresInSight.Keys.Take(4).ToArray();
         var validatedSquares = new List<Square>();
@@ -26,14 +26,16 @@ public static class PieceMovementRay
 
             CheckTraceLine(tracesIndex[0], up.CurrentPosition < 64, num => num + 8, up, lineData, ref keepChecking);
             CheckTraceLine(tracesIndex[1], down.CurrentPosition >= 0, num => num - 8, down, lineData, ref keepChecking);
-            CheckTraceLine(tracesIndex[2], (left.CurrentPosition + 1) % 8 != 0, num => --num, left, lineData, ref keepChecking);
-            CheckTraceLine(tracesIndex[3], right.CurrentPosition % 8 != 0, num => ++num, right, lineData, ref keepChecking);
+            CheckTraceLine(tracesIndex[2], (left.CurrentPosition + 1) % 8 != 0, num => --num, left, lineData,
+                ref keepChecking);
+            CheckTraceLine(tracesIndex[3], right.CurrentPosition % 8 != 0, num => ++num, right, lineData,
+                ref keepChecking);
         } while (keepChecking);
 
         return validatedSquares.ToArray();
     }
 
-    public static Square[] GetCrossSquares(this IRayPiece currentPiece, int startingPosition, Square[] allSquares)
+    public static IEnumerable<Square> GetCrossSquares(this IRayPiece currentPiece, int startingPosition, Square[] allSquares)
     {
         var tracesIndex = currentPiece.SquaresInSight.Count == 4
             ? currentPiece.SquaresInSight.Keys.Take(4).ToArray()
@@ -55,17 +57,21 @@ public static class PieceMovementRay
 
             if (upperRight.CurrentPosition < 64 && upperLeft.CurrentPosition < 64)
             {
-                CheckTraceLine(tracesIndex[0], upperRight.CurrentPosition % 8 != 0, num => num + 9, upperRight, lineData,
+                CheckTraceLine(tracesIndex[0], upperRight.CurrentPosition % 8 != 0, num => num + 9, upperRight,
+                    lineData,
                     ref keepChecking);
-                CheckTraceLine(tracesIndex[1], (upperLeft.CurrentPosition + 1) % 8 != 0, num => num + 7, upperLeft, lineData,
+                CheckTraceLine(tracesIndex[1], (upperLeft.CurrentPosition + 1) % 8 != 0, num => num + 7, upperLeft,
+                    lineData,
                     ref keepChecking);
             }
 
             if (lowerRight.CurrentPosition >= 0 && lowerLeft.CurrentPosition >= 0)
             {
-                CheckTraceLine(tracesIndex[2], lowerRight.CurrentPosition % 8 != 0, num => num - 9, lowerRight, lineData,
+                CheckTraceLine(tracesIndex[2], lowerRight.CurrentPosition % 8 != 0, num => num - 9, lowerRight,
+                    lineData,
                     ref keepChecking);
-                CheckTraceLine(tracesIndex[3], (lowerLeft.CurrentPosition + 1) % 8 != 0, num => num - 7, lowerLeft, lineData,
+                CheckTraceLine(tracesIndex[3], (lowerLeft.CurrentPosition + 1) % 8 != 0, num => num - 7, lowerLeft,
+                    lineData,
                     ref keepChecking);
             }
         } while (keepChecking);
@@ -91,22 +97,18 @@ public static class PieceMovementRay
         int rayNum, IRayPiece piece, List<Square> squaresToMove, Square currentSquare, ref bool shouldKeepGoing,
         ref Piece? foundPiece)
     {
-        if (currentSquare.Piece is null) return;
-
-        if (currentSquare.Piece.Color == piece.Color)
-        {
+        if (currentSquare.Piece?.Color == piece.Color)
             shouldKeepGoing = false;
-            return;
-        }
 
         if (foundPiece is null && shouldKeepGoing)
         {
-            if (currentSquare.Piece.GetType().Name == nameof(King)) return;
+            if (currentSquare.Piece is not null && currentSquare.Piece.GetType().Name == nameof(King)) return;
             foundPiece = currentSquare.Piece;
             squaresToMove.Add(currentSquare);
         }
         else if (shouldKeepGoing)
         {
+            if (currentSquare.Piece is null) return;
             if (currentSquare.Piece.GetType().Name == nameof(King) && currentSquare.Piece.Color != piece.Color)
                 foundPiece!.PinnedBy.TryAdd(piece, rayNum);
 

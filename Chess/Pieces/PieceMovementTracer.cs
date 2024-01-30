@@ -1,5 +1,5 @@
 using LineDataTuple = ( //Alias for tuple
-    Chess.Pieces.IRayPiece currentPiece,
+    Chess.Pieces.ITracePiece currentPiece,
     System.Collections.Generic.List<Chess.Square> validatedSquares,
     Chess.Square[] allSquares);
 
@@ -7,7 +7,7 @@ namespace Chess.Pieces;
 
 public static class PieceMovementTracer
 {
-    public static IEnumerable<Square> GetPlusSquares(this IRayPiece currentPiece, int startingPosition, Square[] allSquares)
+    public static List<Square> GetPlusSquares(this ITracePiece currentPiece, int startingPosition, Square[] allSquares)
     {
         var tracesIndex = currentPiece.SquaresInSight.Keys.Take(4).ToArray();
         var validatedSquares = new List<Square>();
@@ -32,10 +32,10 @@ public static class PieceMovementTracer
                 ref keepChecking);
         } while (keepChecking);
 
-        return validatedSquares.ToArray();
+        return validatedSquares;
     }
 
-    public static IEnumerable<Square> GetCrossSquares(this IRayPiece currentPiece, int startingPosition, Square[] allSquares)
+    public static List<Square> GetCrossSquares(this ITracePiece currentPiece, int startingPosition, Square[] allSquares)
     {
         var tracesIndex = currentPiece.SquaresInSight.Count == 4
             ? currentPiece.SquaresInSight.Keys.Take(4).ToArray()
@@ -76,7 +76,7 @@ public static class PieceMovementTracer
             }
         } while (keepChecking);
 
-        return validatedSquares.ToArray();
+        return validatedSquares;
     }
 
     private static void CheckTraceLine(int traceIndex, bool condition, Func<int, int> operation,
@@ -94,7 +94,7 @@ public static class PieceMovementTracer
     }
 
     private static void CheckSquare(
-        int rayNum, IRayPiece piece, List<Square> squaresToMove, Square currentSquare, ref bool shouldKeepGoing,
+        int traceNum, ITracePiece piece, List<Square> squaresToMove, Square currentSquare, ref bool shouldKeepGoing,
         ref Piece? foundPiece)
     {
         if (currentSquare.Piece?.Color == piece.Color)
@@ -102,7 +102,6 @@ public static class PieceMovementTracer
 
         if (foundPiece is null && shouldKeepGoing)
         {
-            if (currentSquare.Piece is not null && currentSquare.Piece.GetType().Name == nameof(King)) return;
             foundPiece = currentSquare.Piece;
             squaresToMove.Add(currentSquare);
         }
@@ -110,7 +109,7 @@ public static class PieceMovementTracer
         {
             if (currentSquare.Piece is null) return;
             if (currentSquare.Piece.GetType().Name == nameof(King) && currentSquare.Piece.Color != piece.Color)
-                foundPiece!.PinnedBy.TryAdd(piece, rayNum);
+                foundPiece!.PinnedBy.TryAdd(piece, traceNum);
 
             else shouldKeepGoing = false;
         }

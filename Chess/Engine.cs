@@ -1,9 +1,13 @@
 using Chess.Pieces;
 
+// ReSharper disable SimplifyLinqExpressionUseAll
+
 namespace Chess;
 
 public class Engine
 {
+    private Board? _board;
+
     public IEnumerable<Piece> GetValidPieces(Board board, bool isWhite)
     {
         var validPieces = board.Squares
@@ -17,37 +21,55 @@ public class Engine
     //Should this really needed to be a wrapper?
     public IEnumerable<Square> GetValidMovementSquare(Piece piece)
     {
-        return piece.GetAvailableMovements();
+        var movements = piece.GetAvailableMovements();
+        return movements.Where(sqr => sqr.Piece?.GetType().Name != nameof(King));
     }
 
     public void MovePiece(Piece pieceToMove, Square squareToMove, Board board)
     {
-        board.Squares
-            .Single(sqr => sqr.Piece?.Id == pieceToMove.Id)
-            .Piece = null;
-        squareToMove.Piece = pieceToMove;
-        
+        board.MovePiece(pieceToMove, squareToMove);
         UpdatePaths(board);
     }
 
     public void UpdatePaths(Board board)
     {
-        var pieces = board.Squares
-            .Where(sqr => sqr.Piece is not null)
-            .Select(p => p.Piece);
+        board.ClearAllThreats();
+        var pieces = board.GetAllPieces();
 
         foreach (var piece in pieces)
         {
             piece.PinnedBy.Clear();
             piece.FlushAvailableMovements();
-            if (piece.GetType().GetInterface(nameof(IRayPiece)) == typeof(IRayPiece))
+            if (piece.GetType().GetInterface(nameof(ITracePiece)) == typeof(ITracePiece))
             {
-                (piece as IRayPiece).ClearRays();
+                (piece as ITracePiece).ClearTraces();
             }
         }
+
         foreach (var piece in pieces)
         {
             piece.ScanAvailableMovements(board);
+        }
+
+        foreach (var piece in pieces)
+        {
+            piece.ValidateMovements();
+        }
+
+        CheckForCheckmate(board);
+    }
+
+    private void CheckForCheckmate(Board board)
+    {
+        var kingSquares = board.GetKingSquares();
+        foreach (var ksqr in kingSquares)
+        {
+            if (!ksqr.Threats.Any(p => p.Color != ksqr.Piece!.Color)) continue;
+            if (ksqr.Piece!.GetAvailableMovements().Any()) continue;
+
+            var threat = ksqr.Threats.Single(p => p.Color != ksqr.Piece!.Color);
+            if (!board.Squares.Any(sqr => sqr.Threats.Any(p => p.Id == threat.Id)))
+                throw new NotImplementedException("Checkmate");
         }
     }
 }

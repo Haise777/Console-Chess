@@ -10,6 +10,7 @@ public class ChessGame(ConsoleDisplay display, Engine engine, Board board)
 
     public void Start()
     {
+        display.DisplayBoard(board);
         engine.UpdatePaths(board);
         while (true)
         {

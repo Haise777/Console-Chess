@@ -11,7 +11,7 @@ public class ChessGame(ConsoleDisplay display, Engine engine, Board board)
     public void Start()
     {
         display.DisplayBoard(board);
-        engine.UpdatePaths(board);
+        engine.UpdateBoard(board);
         while (true)
         {
             _isWhite = !_isWhite;

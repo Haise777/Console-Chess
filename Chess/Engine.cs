@@ -28,10 +28,10 @@ public class Engine
     public void MovePiece(Piece pieceToMove, Square squareToMove, Board board)
     {
         board.MovePiece(pieceToMove, squareToMove);
-        UpdatePaths(board);
+        UpdateBoard(board);
     }
 
-    public void UpdatePaths(Board board)
+    public void UpdateBoard(Board board)
     {
         board.ClearAllThreats();
         var pieces = board.GetAllPieces();

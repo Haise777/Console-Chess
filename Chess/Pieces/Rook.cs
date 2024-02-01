@@ -2,22 +2,12 @@ namespace Chess.Pieces;
 
 public class Rook(int id, Color color) : Piece(id, color), ITracePiece
 {
-    protected override List<Square> GetAvailableMovements(Board board)
-    {
-        var position = board.GetPositionNum(this);
-        var availableSquares = this.GetPlusSquares(position, board.Squares);
-
-        return availableSquares;
-    }
-    
     public void ClearTraces()
     {
-        for (var i = 0; i < SquaresInSight.Count; i++)
-        {
+        for (var i = 0; i < SquaresInSight.Count; i++) 
             SquaresInSight[i].Clear();
-        }
     }
-    
+
     public Dictionary<int, List<Square>> SquaresInSight { get; } = new()
     {
         [0] = [],
@@ -25,4 +15,12 @@ public class Rook(int id, Color color) : Piece(id, color), ITracePiece
         [2] = [],
         [3] = []
     };
+
+    protected override List<Square> GetAvailableMovements(Board board)
+    {
+        var position = board.GetPositionNum(this);
+        var availableSquares = this.GetPlusSquares(position, board.Squares);
+
+        return availableSquares;
+    }
 }

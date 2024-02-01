@@ -1,6 +1,7 @@
 using Chess.Pieces;
 
 namespace Chess;
+
 //TODO: This whole class will be remade
 public class ConsoleDisplay
 {
@@ -9,10 +10,7 @@ public class ConsoleDisplay
         var squares = board.Squares;
         for (var i = 0; i < 64; i++)
         {
-            if (i % 8 == 0)
-            {
-                Console.Write("\n");
-            }
+            if (i % 8 == 0) Console.Write("\n");
             Console.Write(
                 $"{squares[i].Id:00}:{PieceTranslator(squares[i].Piece?.Id) ?? "   "}{squares[i].Piece?.Color.ToString().ToLower()[0] ?? ' '} | ");
         }
@@ -26,10 +24,8 @@ public class ConsoleDisplay
     public int SelectSquareToMove(Piece piece, Square[] squares)
     {
         for (var i = 0; i < squares.Length; i++)
-        {
             Console.Write(
                 $"{squares[i].Id:00}:{PieceTranslator(squares[i].Piece?.Id) ?? "   "}{squares[i].Piece?.Color.ToString().ToLower()[0] ?? ' '} | ");
-        }
 
         Console.Write($"\n({piece.Id}){piece.GetType().Name} > ");
         var input = int.Parse(Console.ReadLine());

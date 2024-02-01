@@ -6,8 +6,8 @@ namespace Chess;
 
 public class ChessGame(ConsoleDisplay display, Engine engine, Board board)
 {
+    private readonly List<Piece> _captured = [];
     private bool _isWhite;
-    private List<Piece> _captured = [];
 
     public void Start()
     {

@@ -13,7 +13,7 @@ public class Engine
         var validPieces = board.Squares
             .Where(sqr => sqr.Piece is not null)
             .Select(sqr => sqr.Piece)
-            .Where(p => (p?.Color == Color.White) == isWhite);
+            .Where(p => p?.Color == Color.White == isWhite);
 
         return validPieces!;
     }

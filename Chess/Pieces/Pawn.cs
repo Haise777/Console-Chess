@@ -12,7 +12,7 @@ public class Pawn(int id, Color color) : Piece(id, color)
             AddSquareIfValid(position + 8, availableSquares, squares);
         else
             AddSquareIfValid(position - 8, availableSquares, squares);
-        
+
         return availableSquares;
     }
 }

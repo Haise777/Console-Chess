@@ -1,6 +1,5 @@
 using LineDataTuple = ( //Alias for tuple
-    Chess.Pieces.ITracePiece currentPiece,
-    System.Collections.Generic.List<Chess.Square> validatedSquares,
+    Chess.Pieces.ITracePiece currentPiece, System.Collections.Generic.List<Chess.Square> validatedSquares,
     Chess.Square[] allSquares);
 
 namespace Chess.Pieces;

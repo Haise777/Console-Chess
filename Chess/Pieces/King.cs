@@ -39,16 +39,14 @@ public class King(int id, Color color) : Piece(id, color)
 
         AddSquareIfValid(right, availableSquares, squares);
         AddSquareIfValid(left, availableSquares, squares);
-        
+
         return availableSquares;
     }
 
     protected override void RemoveIllegalSquares(List<Square> validSquares)
     {
         foreach (var sqr in validSquares)
-        {
             if (sqr.Threats.Any(p => p.Color != Color))
                 validSquares.Remove(sqr);
-        }
     }
 }

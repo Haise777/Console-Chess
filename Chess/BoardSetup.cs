@@ -10,7 +10,6 @@ public partial class Board
     {
         var squares = new Square[64];
         for (var i = 1; i <= 64; i++)
-        {
             squares[i - 1] = i switch
             {
                 //White pieces
@@ -56,7 +55,6 @@ public partial class Board
                 //Empty squares
                 _ => new Square(i)
             };
-        }
 
         return squares;
     }

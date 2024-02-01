@@ -4,12 +4,12 @@ namespace Chess;
 
 public partial class Board
 {
-    public Square[] Squares { get; }
-
     public Board()
     {
         Squares = InitializeBoard();
     }
+
+    public Square[] Squares { get; }
 
     public void MovePiece(Piece pieceToMove, Square squareToMove)
     {
@@ -20,14 +20,12 @@ public partial class Board
     }
 
     public int GetPositionNum(Piece piece)
-    {
-        return Squares.Single(sqr => sqr.Piece?.Id == piece.Id).Id - 1;
-    }
+        => Squares.Single(sqr => sqr.Piece?.Id == piece.Id).Id - 1;
+
 
     public IEnumerable<Square> GetKingSquares()
-    {
-        return Squares.Where(sqr => sqr.Piece?.GetType().Name == nameof(King));
-    }
+        => Squares.Where(sqr => sqr.Piece?.GetType().Name == nameof(King));
+
 
     public void UpdatePaths()
     {
@@ -39,34 +37,23 @@ public partial class Board
             piece.PinnedBy.Clear();
             piece.FlushAvailableMovements();
             if (piece.GetType().GetInterface(nameof(ITracePiece)) == typeof(ITracePiece))
-            {
                 (piece as ITracePiece).ClearTraces();
-            }
         }
 
-        foreach (var piece in pieces)
-        {
-            piece.ScanAvailableMovements(this);
-        }
+        foreach (var piece in pieces) piece.ScanAvailableMovements(this);
 
-        foreach (var piece in pieces)
-        {
-            piece.ValidateMovements();
-        }
+        foreach (var piece in pieces) piece.ValidateMovements();
     }
 
     private IEnumerable<Piece> GetAllPieces()
-    {
-        return Squares
+        => Squares
             .Where(sqr => sqr.Piece is not null)
             .Select(p => p.Piece)!;
-    }
+
 
     private void ClearAllThreats()
     {
-        foreach (var square in Squares)
-        {
+        foreach (var square in Squares) 
             square.Threats.Clear();
-        }
     }
 }

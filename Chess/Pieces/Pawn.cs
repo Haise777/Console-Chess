@@ -5,7 +5,7 @@ public class Pawn(int id, Color color) : Piece(id, color)
     protected override List<Square> GetAvailableMovements(Board board)
     {
         var squares = board.Squares;
-        var position = squares.Single(sqr => sqr.Piece?.Id == Id).Id - 1;
+        var position = board.GetPositionNum(this);
         var availableSquares = new List<Square>();
 
         if (Color == Color.White)

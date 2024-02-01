@@ -4,11 +4,9 @@ public abstract class Piece(int id, Color color)
 {
     public int Id { get; } = id;
     public Color Color { get; } = color;
-    protected List<Square> AvailableMovements { get; private set; } = [];
-    public Dictionary<ITracePiece, int> PinnedBy { get; set; } = new();
-
-    public IEnumerable<Square> GetAvailableMovements() => AvailableMovements;
-
+    public List<Square> AvailableMovements { get; } = [];
+    public Dictionary<ITracePiece, int> PinnedBy { get; } = new();
+    
     public void FlushAvailableMovements() => AvailableMovements.Clear();
 
     public void ScanAvailableMovements(Board board)

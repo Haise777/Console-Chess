@@ -4,9 +4,8 @@ public class Queen(int id, Color color) : Piece(id, color), ITracePiece
 {
     protected override List<Square> GetAvailableMovements(Board board)
     {
-        var position = board.Squares.Single(sqr => sqr.Piece?.Id == Id).Id - 1;
-        var availableSquares = new List<Square>();
-        availableSquares.AddRange(this.GetPlusSquares(position, board.Squares));
+        var position = board.GetPositionNum(this);
+        var availableSquares = this.GetPlusSquares(position, board.Squares);
         availableSquares.AddRange(this.GetCrossSquares(position, board.Squares));
 
         return availableSquares;
@@ -20,7 +19,7 @@ public class Queen(int id, Color color) : Piece(id, color), ITracePiece
         }
     }
 
-    public Dictionary<int, List<Square>> SquaresInSight { get; set; } = new()
+    public Dictionary<int, List<Square>> SquaresInSight { get; } = new()
     {
         [0] = [],
         [1] = [],

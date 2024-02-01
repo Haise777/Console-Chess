@@ -23,13 +23,15 @@ public static class PieceMovementTracer
         do
         {
             keepChecking = false;
+            var isUpwardsValid = up.CurrentPosition < 64;
+            var isDownwardsValid = down.CurrentPosition >= 0;
+            var isLeftValid = (left.CurrentPosition + 1) % 8 != 0;
+            var isRightValid = right.CurrentPosition % 8 != 0;
 
-            CheckTraceLine(tracesIndex[0], up.CurrentPosition < 64, num => num + 8, up, lineData, ref keepChecking);
-            CheckTraceLine(tracesIndex[1], down.CurrentPosition >= 0, num => num - 8, down, lineData, ref keepChecking);
-            CheckTraceLine(tracesIndex[2], (left.CurrentPosition + 1) % 8 != 0, num => --num, left, lineData,
-                ref keepChecking);
-            CheckTraceLine(tracesIndex[3], right.CurrentPosition % 8 != 0, num => ++num, right, lineData,
-                ref keepChecking);
+            CheckTraceLine(tracesIndex[0], isUpwardsValid, num => num + 8, up, lineData, ref keepChecking);
+            CheckTraceLine(tracesIndex[1], isDownwardsValid, num => num - 8, down, lineData, ref keepChecking);
+            CheckTraceLine(tracesIndex[2], isLeftValid, num => --num, left, lineData, ref keepChecking);
+            CheckTraceLine(tracesIndex[3], isRightValid, num => ++num, right, lineData, ref keepChecking);
         } while (keepChecking);
 
         return validatedSquares;
@@ -55,22 +57,27 @@ public static class PieceMovementTracer
         {
             keepChecking = false;
 
+            var isUpperRightValid = upperRight.CurrentPosition % 8 != 0;
+            var isUpperLeftValid = (upperLeft.CurrentPosition + 1) % 8 != 0;
+            var isLowerRightValid = lowerRight.CurrentPosition % 8 != 0;
+            var isLowerLeftValid = (lowerLeft.CurrentPosition + 1) % 8 != 0;
+
             if (upperRight.CurrentPosition < 64 && upperLeft.CurrentPosition < 64)
             {
-                CheckTraceLine(tracesIndex[0], upperRight.CurrentPosition % 8 != 0, num => num + 9, upperRight,
+                CheckTraceLine(tracesIndex[0], isUpperRightValid, num => num + 9, upperRight,
                     lineData,
                     ref keepChecking);
-                CheckTraceLine(tracesIndex[1], (upperLeft.CurrentPosition + 1) % 8 != 0, num => num + 7, upperLeft,
+                CheckTraceLine(tracesIndex[1], isUpperLeftValid, num => num + 7, upperLeft,
                     lineData,
                     ref keepChecking);
             }
 
             if (lowerRight.CurrentPosition >= 0 && lowerLeft.CurrentPosition >= 0)
             {
-                CheckTraceLine(tracesIndex[2], lowerRight.CurrentPosition % 8 != 0, num => num - 9, lowerRight,
+                CheckTraceLine(tracesIndex[2], isLowerRightValid, num => num - 9, lowerRight,
                     lineData,
                     ref keepChecking);
-                CheckTraceLine(tracesIndex[3], (lowerLeft.CurrentPosition + 1) % 8 != 0, num => num - 7, lowerLeft,
+                CheckTraceLine(tracesIndex[3], isLowerLeftValid, num => num - 7, lowerLeft,
                     lineData,
                     ref keepChecking);
             }

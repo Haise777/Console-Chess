@@ -21,42 +21,15 @@ public class Engine
     //Should this really needed to be a wrapper?
     public IEnumerable<Square> GetValidMovementSquare(Piece piece)
     {
-        var movements = piece.GetAvailableMovements();
+        var movements = piece.AvailableMovements;
         return movements.Where(sqr => sqr.Piece?.GetType().Name != nameof(King));
     }
 
     public void MovePiece(Piece pieceToMove, Square squareToMove, Board board)
     {
         board.MovePiece(pieceToMove, squareToMove);
-        UpdateBoard(board);
-    }
-
-    public void UpdateBoard(Board board)
-    {
-        board.ClearAllThreats();
-        var pieces = board.GetAllPieces();
-
-        foreach (var piece in pieces)
-        {
-            piece.PinnedBy.Clear();
-            piece.FlushAvailableMovements();
-            if (piece.GetType().GetInterface(nameof(ITracePiece)) == typeof(ITracePiece))
-            {
-                (piece as ITracePiece).ClearTraces();
-            }
-        }
-
-        foreach (var piece in pieces)
-        {
-            piece.ScanAvailableMovements(board);
-        }
-
-        foreach (var piece in pieces)
-        {
-            piece.ValidateMovements();
-        }
-
-        CheckForCheckmate(board);
+        board.UpdatePaths();
+        CheckForCheckmate(board); //this can become a bool returning method
     }
 
     private void CheckForCheckmate(Board board)
@@ -65,7 +38,7 @@ public class Engine
         foreach (var ksqr in kingSquares)
         {
             if (!ksqr.Threats.Any(p => p.Color != ksqr.Piece!.Color)) continue;
-            if (ksqr.Piece!.GetAvailableMovements().Any()) continue;
+            if (ksqr.Piece!.AvailableMovements.Any()) continue;
 
             var threat = ksqr.Threats.Single(p => p.Color != ksqr.Piece!.Color);
             if (!board.Squares.Any(sqr => sqr.Threats.Any(p => p.Id == threat.Id)))

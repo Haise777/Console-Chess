@@ -1,4 +1,5 @@
 using Chess.Pieces;
+
 // ReSharper disable PossibleMultipleEnumeration
 
 namespace Chess;
@@ -10,18 +11,17 @@ public class ChessGame(ConsoleDisplay display, Engine engine, Board board)
 
     public void Start()
     {
-        display.DisplayBoard(board);
-        engine.UpdateBoard(board);
+        board.UpdatePaths();
         while (true)
         {
             _isWhite = !_isWhite;
-            MoveControl();
+            Move();
 
             //TODO: Finish game logic
         }
     }
 
-    private void MoveControl()
+    private void Move()
     {
         Piece? piece = null;
         Square? square;
@@ -31,16 +31,16 @@ public class ChessGame(ConsoleDisplay display, Engine engine, Board board)
             Console.Clear();
             display.DisplayBoard(board);
             Console.WriteLine("Is white: " + _isWhite);
-            
+
             if (piece is null)
                 if ((piece = SelectPiece()) is null)
                     continue;
 
             if ((square = SelectSquare(piece)) is not null) break;
         }
-        
-        if (square.Piece is not null)
-            _captured.Add(square.Piece);
+
+        if (square.Piece is not null) //
+            _captured.Add(square.Piece); //Currently useless
 
         engine.MovePiece(piece, square, board);
     }
@@ -48,29 +48,28 @@ public class ChessGame(ConsoleDisplay display, Engine engine, Board board)
     private Piece? SelectPiece()
     {
         var validPieces = engine.GetValidPieces(board, _isWhite);
-
-        var selectedPiece = display.SelectPiece();
-        if (validPieces.All(p => p.Id != selectedPiece))
+        var selectedPiece = validPieces.SingleOrDefault(p => p.Id == display.SelectPiece());
+        if (selectedPiece is null)
         {
             Console.WriteLine("Invalid Piece");
-            return null;
+            Console.ReadKey();
         }
 
-        return validPieces.Single(p => p.Id == selectedPiece);
+        return selectedPiece;
     }
 
     private Square? SelectSquare(Piece piece)
     {
         var validSquares = engine.GetValidMovementSquare(piece);
-
-        var selectedSquare = display.SelectSquareToMove(piece, validSquares.ToArray());
-        if (validSquares.All(s => s.Id != selectedSquare))
+        var selectedSquare = validSquares
+            .SingleOrDefault(s => s.Id == display
+                .SelectSquareToMove(piece, validSquares.ToArray()));
+        if (selectedSquare is null)
         {
-            //TODO: Invalid square
             Console.WriteLine("Invalid position to move");
-            return null;
+            Console.ReadKey();
         }
 
-        return validSquares.Single(s => s.Id == selectedSquare);
+        return selectedSquare;
     }
 }

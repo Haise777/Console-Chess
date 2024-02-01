@@ -48,7 +48,8 @@ public class ChessGame(ConsoleDisplay display, Engine engine, Board board)
     private Piece? SelectPiece()
     {
         var validPieces = engine.GetValidPieces(board, _isWhite);
-        var selectedPiece = validPieces.SingleOrDefault(p => p.Id == display.SelectPiece());
+        var input = display.SelectPiece();
+        var selectedPiece = validPieces.SingleOrDefault(p => p.Id == input);
         if (selectedPiece is null)
         {
             Console.WriteLine("Invalid Piece");
@@ -61,9 +62,9 @@ public class ChessGame(ConsoleDisplay display, Engine engine, Board board)
     private Square? SelectSquare(Piece piece)
     {
         var validSquares = engine.GetValidMovementSquare(piece);
+        var input = display.SelectSquareToMove(piece, validSquares.ToArray());
         var selectedSquare = validSquares
-            .SingleOrDefault(s => s.Id == display
-                .SelectSquareToMove(piece, validSquares.ToArray()));
+            .SingleOrDefault(s => s.Id == input);
         if (selectedSquare is null)
         {
             Console.WriteLine("Invalid position to move");
